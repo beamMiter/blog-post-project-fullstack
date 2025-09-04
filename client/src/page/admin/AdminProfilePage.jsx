@@ -127,7 +127,7 @@ export default function AdminProfilePage() {
       }
 
       await axios.put(
-        "https://blog-post-project-api-with-db.vercel.app/profile",
+        "http://localhost:4001/profile",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

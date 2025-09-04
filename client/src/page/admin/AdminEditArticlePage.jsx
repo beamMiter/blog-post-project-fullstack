@@ -55,11 +55,11 @@ export default function AdminEditArticlePage() {
       try {
         setIsLoading(true);
         const responseCategories = await axios.get(
-          "https://blog-post-project-api-with-db.vercel.app/categories"
+          "http://localhost:4001/categories"
         );
         setCategories(responseCategories.data);
         const response = await axios.get(
-          `https://blog-post-project-api-with-db.vercel.app/posts/admin/${postId}`
+          `http://localhost:4001/posts/admin/${postId}`
         );
         setPost(response.data);
       } catch {
@@ -120,7 +120,7 @@ export default function AdminEditArticlePage() {
         formData.append("imageFile", imageFile.file);
 
         await axios.put(
-          `https://blog-post-project-api-with-db.vercel.app/posts/${postId}`,
+          `http://localhost:4001/posts/${postId}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" },
@@ -129,7 +129,7 @@ export default function AdminEditArticlePage() {
       } else {
         // If the image is not changed, use the old method
         await axios.put(
-          `https://blog-post-project-api-with-db.vercel.app/posts/${postId}`,
+          `http://localhost:4001/posts/${postId}`,
           {
             title: post.title,
             image: post.image, // Existing image URL
@@ -193,7 +193,7 @@ export default function AdminEditArticlePage() {
     try {
       navigate("/admin/article-management");
       await axios.delete(
-        `https://blog-post-project-api-with-db.vercel.app/posts/${postId}`
+        `http://localhost:4001/posts/${postId}`
       );
       toast.custom((t) => (
         <div className="bg-green-500 text-white p-4 rounded-sm flex justify-between items-start">

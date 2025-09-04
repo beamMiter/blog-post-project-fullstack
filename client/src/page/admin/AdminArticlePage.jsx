@@ -46,13 +46,11 @@ export default function AdminArticleManagementPage() {
     setIsLoading(true);
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(
-          "https://blog-post-project-api-with-db.vercel.app/posts/admin"
-        );
+        const response = await axios.get("http://localhost:4001/posts/admin");
         setPosts(response.data.posts);
         setFilteredPosts(response.data.posts);
         const responseCategories = await axios.get(
-          "https://blog-post-project-api-with-db.vercel.app/categories"
+          "http://localhost:4001/categories"
         );
         setCategories(responseCategories.data);
       } catch (error) {
@@ -98,7 +96,7 @@ export default function AdminArticleManagementPage() {
     try {
       setIsLoading(true);
       await axios.delete(
-        `https://blog-post-project-api-with-db.vercel.app/posts/${postId}`
+        `http://localhost:4001/posts/${postId}`
       );
       toast.custom((t) => (
         <div className="bg-green-500 text-white p-4 rounded-sm flex justify-between items-start">

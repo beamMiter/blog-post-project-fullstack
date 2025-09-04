@@ -35,7 +35,7 @@ export default function Articles() {
       const fetchCategories = async () => {
         try {
           const responseCategories = await axios.get(
-            "https://blog-post-project-api-with-db.vercel.app/categories"
+            "http://localhost:4001/categories"
           );
           setCategories(responseCategories.data);
           setIsFirstTimeRender(false); // Mark the first render logic as done
@@ -54,7 +54,7 @@ export default function Articles() {
       setIsLoading(true); // Start loading
       try {
         const response = await axios.get(
-          `https://blog-post-project-api-with-db.vercel.app/posts?page=${page}&limit=6${
+          `http://localhost:4001/posts?page=${page}&limit=6${
             category !== "Highlight" ? `&category=${category}` : ""
           }`
         );
@@ -81,7 +81,7 @@ export default function Articles() {
       const fetchSuggestions = async () => {
         try {
           const response = await axios.get(
-            `https://blog-post-project-api-with-db.vercel.app/posts?keyword=${searchKeyword}`
+            `http://localhost:4001/posts?keyword=${searchKeyword}`
           );
           setSuggestions(response.data.posts); // Set search suggestions
           setIsLoading(false);

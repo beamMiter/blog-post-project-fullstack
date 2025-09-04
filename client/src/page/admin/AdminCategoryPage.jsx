@@ -38,7 +38,7 @@ export default function AdminCategoryManagementPage() {
       try {
         setIsLoading(true);
         const responseCategories = await axios.get(
-          "https://blog-post-project-api-with-db.vercel.app/categories"
+          "http://localhost:4001/categories"
         );
         setCategories(responseCategories.data);
       } catch (error) {
@@ -63,7 +63,7 @@ export default function AdminCategoryManagementPage() {
     try {
       setIsLoading(true);
       await axios.delete(
-        `https://blog-post-project-api-with-db.vercel.app/categories/${categoryId}`
+        `http://localhost:4001/categories/${categoryId}`
       );
       toast.custom((t) => (
         <div className="bg-green-500 text-white p-4 rounded-sm flex justify-between items-start">

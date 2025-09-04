@@ -31,7 +31,7 @@ function AuthProvider(props) {
     try {
       setState((prevState) => ({ ...prevState, getUserLoading: true }));
       const response = await axios.get(
-        "https://blog-post-project-api-with-db.vercel.app/auth/get-user"
+        "http://localhost:4001/auth/get-user"
       );
       setState((prevState) => ({
         ...prevState,
@@ -57,7 +57,7 @@ function AuthProvider(props) {
     try {
       setState((prevState) => ({ ...prevState, loading: true, error: null }));
       const response = await axios.post(
-        "https://blog-post-project-api-with-db.vercel.app/auth/login",
+        "http://localhost:4001/auth/login",
         data
       );
       const token = response.data.access_token;
@@ -82,7 +82,7 @@ function AuthProvider(props) {
     try {
       setState((prevState) => ({ ...prevState, loading: true, error: null }));
       await axios.post(
-        "https://blog-post-project-api-with-db.vercel.app/auth/register",
+        "http://localhost:4001/auth/register",
         data
       );
       setState((prevState) => ({ ...prevState, loading: false, error: null }));

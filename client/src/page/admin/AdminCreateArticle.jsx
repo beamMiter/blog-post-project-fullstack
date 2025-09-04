@@ -39,7 +39,7 @@ export default function AdminCreateArticlePage() {
       try {
         setIsLoading(true);
         const responseCategories = await axios.get(
-          "https://blog-post-project-api-with-db.vercel.app/categories"
+          "http://localhost:4001/categories"
         );
         setCategories(responseCategories.data);
       } catch (error) {
@@ -83,7 +83,7 @@ export default function AdminCreateArticlePage() {
 
     try {
       await axios.post(
-        "https://blog-post-project-api-with-db.vercel.app/posts",
+        "http://localhost:4001/posts",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

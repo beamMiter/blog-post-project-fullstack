@@ -361,8 +361,7 @@ postRouter.put(
       return res.status(200).json({
         message: "Updated post successfully",
       });
-    } catch (err) {
-      console.error(err);
+    } catch {
       return res.status(500).json({
         message: `Server could not update post due to an error`,
       });
@@ -459,7 +458,6 @@ postRouter.post("/:postId/comments", protectUser, async (req, res) => {
     // 3) Return ตัว Response กลับไปหา Client ว่าสร้างสำเร็จ
     return res.status(201).json({ message: "Created comment successfully" });
   } catch (err) {
-    console.error(err); // Log error for debugging
     return res.status(500).json({
       message:
         "Server could not create comment due to a database connection issue",

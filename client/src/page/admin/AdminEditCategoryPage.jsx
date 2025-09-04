@@ -32,7 +32,7 @@ export default function AdminEditCategoryPage() {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `https://blog-post-project-api-with-db.vercel.app/categories/${categoryId}`
+          `http://localhost:4001/categories/${categoryId}`
         );
         setCategoryName(response.data.name); // Set the category name
       } catch {
@@ -71,7 +71,7 @@ export default function AdminEditCategoryPage() {
 
     try {
       await axios.put(
-        `https://blog-post-project-api-with-db.vercel.app/categories/${categoryId}`,
+        `http://localhost:4001/categories/${categoryId}`,
         {
           name: categoryName,
         }
@@ -126,7 +126,7 @@ export default function AdminEditCategoryPage() {
     try {
       navigate("/admin/category-management");
       await axios.delete(
-        `https://blog-post-project-api-with-db.vercel.app/categories/${categoryId}`
+        `http://localhost:4001/categories/${categoryId}`
       );
 
       toast.custom((t) => (
