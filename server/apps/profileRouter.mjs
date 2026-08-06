@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "../utils/supabase.mjs";
 import connectionPool from "../utils/db.mjs";
 import protectUser from "../middleware/protectUser.mjs";
 import multer from "multer";

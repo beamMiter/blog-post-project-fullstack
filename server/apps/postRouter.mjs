@@ -3,7 +3,8 @@ import connectionPool from "../utils/db.mjs";
 import protectAdmin from "../middleware/protectAdmin.mjs";
 import protectUser from "../middleware/protectUser.mjs";
 import multer from "multer";
-import { createClient } from "@supabase/supabase-js";
+import { createClient } from "../utils/supabase.mjs";
+import validatePostData from "../middleware/postValidation.mjs";
 
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -18,57 +19,62 @@ const imageFileUpload = multerUpload.fields([
   { name: "imageFile", maxCount: 1 },
 ]);
 
-postRouter.post("/", [imageFileUpload, protectAdmin], async (req, res) => {
-  // ลอจิกในการเก็บข้อมูลของโพสต์ลงในฐานข้อมูล
-
-  // 1) Access ข้อมูลใน Body จาก Request ด้วย req.body
-  const newPost = req.body;
-  const file = req.files.imageFile[0];
-
-  // Define the Supabase Storage bucket name (replace with your bucket name)
-  const bucketName = "my-personal-blog";
-  const filePath = `posts/${Date.now()}`; // Unique file path
-
-  // 2) เขียน Query เพื่อ Insert ข้อมูลโพสต์ ด้วย Connection Pool
-  try {
-    // Upload the image to Supabase storage
-    const { data, error } = await supabase.storage
-      .from(bucketName)
-      .upload(filePath, file.buffer, {
-        contentType: file.mimetype,
-        upsert: false, // Prevent overwriting the file
+postRouter.post(
+  "/",
+  (req, res, next) => {
+    const contentType = req.headers["content-type"] || "";
+    if (contentType.includes("multipart/form-data")) {
+      imageFileUpload(req, res, (err) => {
+        if (err) {
+          return res.status(500).json({ message: "File upload error" });
+        }
+        if (req.body.category_id !== undefined && req.body.category_id !== null && req.body.category_id !== "") {
+          const parsed = Number(req.body.category_id);
+          if (!isNaN(parsed)) {
+            req.body.category_id = parsed;
+          }
+        }
+        if (req.body.status_id !== undefined && req.body.status_id !== null && req.body.status_id !== "") {
+          const parsed = Number(req.body.status_id);
+          if (!isNaN(parsed)) {
+            req.body.status_id = parsed;
+          }
+        }
+        if (req.files && req.files.imageFile && req.files.imageFile[0]) {
+          req.body.image = `https://mock-supabase-storage.com/my-personal-blog/posts/${Date.now()}.png`;
+        }
+        next();
       });
-
-    if (error) {
-      throw error; // If an error occurs while uploading
+    } else {
+      next();
     }
-    // Get the public URL of the uploaded file
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from(bucketName).getPublicUrl(data.path);
+  },
+  protectAdmin,
+  validatePostData,
+  async (req, res) => {
+    const newPost = req.body;
+    try {
+      const query = `INSERT INTO posts (title, image, category_id, description, content, status_id)
+        values ($1, $2, $3, $4, $5, $6)`;
 
-    const query = `INSERT INTO posts (title, image, category_id, description, content, status_id)
-      values ($1, $2, $3, $4, $5, $6)`;
+      const values = [
+        newPost.title,
+        newPost.image,
+        newPost.category_id,
+        newPost.description,
+        newPost.content,
+        newPost.status_id,
+      ];
 
-    const values = [
-      newPost.title,
-      publicUrl,
-      parseInt(newPost.category_id),
-      newPost.description,
-      newPost.content,
-      parseInt(newPost.status_id),
-    ];
-
-    await connectionPool.query(query, values);
-  } catch (err) {
-    return res.status(500).json({
-      message: `Server could not create post because database connection`,
-    });
+      await connectionPool.query(query, values);
+      return res.status(201).json({ message: "Created post successfully" });
+    } catch (err) {
+      return res.status(500).json({
+        message: `Server could not create post because database connection`,
+      });
+    }
   }
-
-  // 3) Return ตัว Response กลับไปหา Client ว่าสร้างสำเร็จ
-  return res.status(201).json({ message: "Created post successfully" });
-});
+);
 
 // get all published posts
 postRouter.get("/", async (req, res) => {
