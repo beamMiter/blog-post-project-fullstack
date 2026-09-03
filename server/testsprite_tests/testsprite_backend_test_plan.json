@@ -1,0 +1,7 @@
+[
+  {
+    "id": "TC001",
+    "title": "createpostwithvaliddata",
+    "description": "Test POST /posts endpoint with valid admin authentication and valid JSON body containing title, image URL starting with http/https, numeric category_id, description, content, and status_id 1 or 2. Expect 201 response with creation success message and verify the post is retrievable via GET /posts/{postId}."
+  }
+]

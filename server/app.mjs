@@ -21,6 +21,11 @@ app.use("/categories", categoryRouter);
 app.use("/auth", authRouter);
 app.use("/profile", profileRouter);
 
-app.listen(port, () => {
-  console.log(`Server is running at ${port}`);
-});
+// ระหว่างรัน test ไม่ต้อง bind port จริง — supertest จะเปิด ephemeral port ให้เอง
+if (process.env.NODE_ENV !== "test") {
+  app.listen(port, () => {
+    console.log(`Server is running at ${port}`);
+  });
+}
+
+export default app;
